@@ -3,14 +3,18 @@ import re
 
 def read_markdown_table(file_path):
     """Read markdown file and extract the first table as DataFrame."""
-    with open(file_path, 'r', encoding='utf-8') as f:
-        content = f.read()
+    try:
+        with open(file_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+    except FileNotFoundError:
+        # Return empty DataFrame with required columns
+        return pd.DataFrame(columns=['Name', 'Brand', 'Type', 'Year', 'Notes'])
     
     # Find the table in the content
     table_pattern = r'\|.*\|[\r\n]\|[-\s|]*\|[\r\n](\|.*\|[\r\n])*'
     match = re.search(table_pattern, content)
     if not match:
-        raise ValueError("No table found in the markdown file")
+        return pd.DataFrame(columns=['Name', 'Brand', 'Type', 'Year', 'Notes'])
     
     table_text = match.group(0)
     
@@ -35,7 +39,9 @@ def dataframe_to_markdown(df):
     # Create rows
     rows = []
     for _, row in df.iterrows():
-        rows.append('| ' + ' | '.join(str(cell) for cell in row) + ' |')
+        # Convert None/null to empty string
+        formatted_cells = ['' if pd.isna(cell) else str(cell) for cell in row]
+        rows.append('| ' + ' | '.join(formatted_cells) + ' |')
     
     return '\n'.join([header, separator] + rows)
 
@@ -46,15 +52,22 @@ def add_tea_record(file_path, tea_record):
         file_path: Path to the markdown file
         tea_record: Dictionary with tea information matching table columns
     """
-    # Read current content
-    with open(file_path, 'r', encoding='utf-8') as f:
-        content = f.read()
-    
     # Find and extract the table
     table_pattern = r'\|.*\|[\r\n]\|[-\s|]*\|[\r\n](\|.*\|[\r\n])*'
-    match = re.search(table_pattern, content)
-    if not match:
-        raise ValueError("No table found in the markdown file")
+    try:
+        # Read current content
+        with open(file_path, 'r', encoding='utf-8') as f:
+            content = f.read()
+        
+        match = re.search(table_pattern, content)
+        if not match:
+            # Create new content with empty table if no table exists
+            df = pd.DataFrame(columns=['Name', 'Brand', 'Type', 'Year', 'Notes'])
+            content = "# Tea Catalog\n\n" + dataframe_to_markdown(df) + "\n"
+    except FileNotFoundError:
+        # Create new file with empty table
+        df = pd.DataFrame(columns=['Name', 'Brand', 'Type', 'Year', 'Notes'])
+        content = "# Tea Catalog\n\n" + dataframe_to_markdown(df) + "\n"
     
     # Convert to DataFrame
     df = read_markdown_table(file_path)
