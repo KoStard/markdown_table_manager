@@ -4,7 +4,7 @@ import argparse
 import json
 from pathlib import Path
 from typing import Dict, Any
-from tea_catalog_utils import add_tea_record
+from .tea_catalog_utils import add_tea_record
 
 REQUIRED_COLUMNS = {'name', 'brand', 'type', 'year', 'notes'}
 

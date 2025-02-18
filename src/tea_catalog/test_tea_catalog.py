@@ -1,4 +1,4 @@
-from tea_catalog_utils import read_markdown_table, add_tea_record
+from .tea_catalog_utils import read_markdown_table, add_tea_record
 
 def test_tea_catalog():
     # Create a test markdown file

@@ -17,7 +17,7 @@ dependencies = [
 ]
 
 [project.scripts]
-import_teas = "import_teas:main"
-validate_json_schema = "validate_json_schema:main"
+import_teas = "tea_catalog.import_teas:main"
+validate_json_schema = "tea_catalog.validate_json_schema:main"
 [[tool.uv.index]]
 url = "https://pypi.org/simple"
