@@ -3,21 +3,25 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "tea_catalog"
+name = "markdown_table_manager"
 version = "0.1.0"
-description = "Tea catalog management tool"
+description = "A CLI tool for managing markdown tables, including registration, listing, and MCP server integration."
 readme = "README.md"
 requires-python = ">=3.13"
 license = "MIT"
 authors = [
-    { name = "Tea Catalog Contributors" }
+    { name = "Markdown Table Manager Contributors" }
 ]
 dependencies = [
+    "fastmcp>=2.11.2",
+    "mcp>=1.12.4",
     "pandas>=2.2.3",
+    "pytest>=8.4.1",
+    "pytest-cov>=6.2.1",
 ]
 
 [project.scripts]
-import_teas = "tea_catalog.import_teas:main"
-validate_json_schema = "tea_catalog.validate_json_schema:main"
+markdown_table_manager = "markdown_table_manager.cli:main"
+
 [[tool.uv.index]]
 url = "https://pypi.org/simple"
