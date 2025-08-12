@@ -49,6 +49,13 @@ def read_markdown_file(path: Path) -> pd.DataFrame:
 def write_markdown_file(path: Path, df: pd.DataFrame):
     with open(path, "r", encoding="utf-8") as f:
         content = f.read()
-    updated = update_markdown_table(content, df)
+    
+    if not content.strip() or not re.search(TABLE_REGEX, content):
+        # For empty files or files with no table, just write the table directly
+        updated = markdown_table_to_str(df)
+    else:
+        # Update existing table
+        updated = update_markdown_table(content, df)
+        
     with open(path, "w", encoding="utf-8") as f:
         f.write(updated)

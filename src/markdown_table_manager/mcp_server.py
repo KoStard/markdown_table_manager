@@ -30,6 +30,8 @@ def _generate_instructions() -> str:
         return (
             "Markdown Table Manager MCP Server.\n\n"
             "No tables are currently registered.\n\n"
+            "⚠️ WARNING: Once a markdown file is registered as a catalog table, it should not be modified directly "
+            "with other tools or text editors. Doing so may cause data corruption or loss if the table format is changed.\n\n"
             "Available tools:\n"
             "- list_entries(table_name): list all rows of a registered table.\n"
             "- add_entry(table_name, entry): add a row to a registered table.\n"
@@ -41,6 +43,9 @@ def _generate_instructions() -> str:
         "Markdown Table Manager MCP Server.",
         "",
         "This server provides tools to list, add, delete, and modify rows in registered markdown tables.",
+        "",
+        "⚠️ WARNING: Once a markdown file is registered as a catalog table, it should not be modified directly",
+        "with other tools or text editors. Doing so may cause data corruption or loss if the table format is changed.",
         "",
         "Registered tables and their schemas:",
     ]

@@ -36,6 +36,10 @@ markdown_table_manager status
 markdown_table_manager mcp-server
 ```
 
+## ⚠️ Warning
+
+**Important:** Once a markdown file is registered as a catalog table, it should not be modified directly with other tools or text editors. Doing so may cause data corruption or loss if the table format is changed. Always use the Markdown Table Manager or its MCP API to modify the contents of registered tables.
+
 ## Development
 
 Run the test suite:
