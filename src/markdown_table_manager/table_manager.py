@@ -28,6 +28,21 @@ class TableManager:
         # No state is required beyond the configuration module.
         pass
 
+    def register_table(self, name: str, path: Path) -> None:
+        """
+        Register a markdown table programmatically.
+
+        The ``path`` must point to an existing markdown file.  The assistant
+        should create the file beforehand; otherwise a ``FileNotFoundError`` is
+        raised.  The file is expected to contain a markdown table (or be empty
+        if the table will be created later).
+        """
+        if not path.is_file():
+            raise FileNotFoundError(
+                f"File {path} does not exist. Assistant must create the markdown file before registering."
+            )
+        config.register_table(name, path)
+
     # --------------------------------------------------------------------- #
     # Helper methods
     # --------------------------------------------------------------------- #

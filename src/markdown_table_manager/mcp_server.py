@@ -67,6 +67,7 @@ def _generate_instructions() -> str:
             "- delete_entry(table_name, row_index): deletes the row at the given zero‑based index.",
             "- modify_entry(table_name, key, updates): modifies a row identified by the first column value; "
             "`updates` is a dict of column/value pairs.",
+            "- register_table(name, path): registers a markdown table file. The file must already exist and be a markdown file.",
             "",
             "Use these tools via MCP to manage your markdown tables programmatically.",
         ]
@@ -112,6 +113,14 @@ def run_mcp_server():
         names to their new values.
         """
         manager.modify_entry(table_name, key, updates)
+        return {"status": "ok"}
+
+    @mcp.tool(title="Register table")
+    async def markdown_table_manager__register_table(name: str, path: str):
+        """
+        Registers a markdown table file. The file must already exist and be a markdown file.
+        """
+        manager.register_table(name, Path(path))
         return {"status": "ok"}
 
     mcp.run()
