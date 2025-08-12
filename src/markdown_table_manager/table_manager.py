@@ -67,10 +67,26 @@ class TableManager:
         """
         Append a new row to the table.
 
-        ``entry`` may omit some columns - missing columns are filled with an
+        ``entry`` may omit some columns – missing columns are filled with an
         empty string to keep the table rectangular.
+
+        If the target markdown file does not yet contain a table (i.e. the
+        file is empty or has no recognizable markdown table), a new table is
+        created.  The columns are derived from the keys of ``entry`` and any
+        existing columns, preserving the original order and appending new
+        columns at the end.
         """
         df = self._load_dataframe(table_name)
+
+        # If the file had no table, start with an empty DataFrame.
+        if df.empty and df.columns.empty:
+            # Initialise with the columns present in the entry.
+            df = pd.DataFrame(columns=list(entry.keys()))
+
+        # Add any missing columns that are present in the entry but not in df.
+        for col in entry.keys():
+            if col not in df.columns:
+                df[col] = ""
 
         # Preserve column order; fill missing columns with empty strings.
         new_row = [entry.get(col, "") for col in df.columns]

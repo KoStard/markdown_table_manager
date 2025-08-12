@@ -30,9 +30,20 @@ def update_markdown_table(md_text: str, df: pd.DataFrame) -> str:
 
 
 def read_markdown_file(path: Path) -> pd.DataFrame:
+    """
+    Read a markdown file and return its table as a DataFrame.
+
+    If the file does not contain a markdown table, an empty DataFrame is
+    returned.  This allows callers (e.g., ``TableManager``) to create a new
+    table from scratch by adding entries.
+    """
     with open(path, "r", encoding="utf-8") as f:
         content = f.read()
-    return parse_markdown_table(content)
+    try:
+        return parse_markdown_table(content)
+    except ValueError:
+        # No table found – start with an empty DataFrame.
+        return pd.DataFrame()
 
 
 def write_markdown_file(path: Path, df: pd.DataFrame):
