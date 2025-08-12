@@ -32,15 +32,16 @@ class TableManager:
         """
         Register a markdown table programmatically.
 
-        The ``path`` must point to an existing markdown file.  The assistant
-        should create the file beforehand; otherwise a ``FileNotFoundError`` is
-        raised.  The file is expected to contain a markdown table (or be empty
+        If the file does not exist, it will be created automatically (including any
+        missing parent directories).  The created file will be empty; the table
+        can be populated later via ``add_entry`` or by editing the markdown file
+        directly.  The file is expected to contain a markdown table (or be empty
         if the table will be created later).
         """
         if not path.is_file():
-            raise FileNotFoundError(
-                f"File {path} does not exist. Assistant must create the markdown file before registering."
-            )
+            # Ensure parent directories exist, then create an empty file.
+            path.parent.mkdir(parents=True, exist_ok=True)
+            path.touch(exist_ok=True)
         config.register_table(name, path)
 
     # --------------------------------------------------------------------- #

@@ -21,6 +21,7 @@ uv tool install git+https://github.com/KoStard/markdown_table_manager
 ```bash
 # Register a table
 markdown_table_manager register mytable /path/to/table.md
+# If the specified markdown file does not exist, it will be created automatically.
 
 # List all registered tables
 markdown_table_manager list
