@@ -83,7 +83,7 @@ class TableManager:
         """
         Append a new row to the table.
 
-        ``entry`` may omit some columns – missing columns are filled with an
+        ``entry`` may omit some columns - missing columns are filled with an
         empty string to keep the table rectangular.
 
         If the target markdown file does not yet contain a table (i.e. the
@@ -161,6 +161,38 @@ class TableManager:
                 raise KeyError(f"Column '{col}' does not exist in table '{table_name}'.")
             df.at[row_idx, col] = val
 
+        self._save_dataframe(table_name, df)
+
+    def add_column(self, table_name: str, column_name: str, default: Any = "") -> None:
+        """
+        Add a new column to the table.
+
+        ``default`` is the value used for existing rows.  If the column already
+        exists a ``ValueError`` is raised.
+        """
+        df = self._load_dataframe(table_name)
+
+        if column_name in df.columns:
+            raise ValueError(f"Column '{column_name}' already exists in table '{table_name}'.")
+
+        df[column_name] = default
+        self._save_dataframe(table_name, df)
+
+    def rename_column(self, table_name: str, old_name: str, new_name: str) -> None:
+        """
+        Rename an existing column.
+
+        Raises ``KeyError`` if ``old_name`` does not exist and ``ValueError`` if
+        ``new_name`` already exists.
+        """
+        df = self._load_dataframe(table_name)
+
+        if old_name not in df.columns:
+            raise KeyError(f"Column '{old_name}' does not exist in table '{table_name}'.")
+        if new_name in df.columns:
+            raise ValueError(f"Column '{new_name}' already exists in table '{table_name}'.")
+
+        df = df.rename(columns={old_name: new_name})
         self._save_dataframe(table_name, df)
 
     # --------------------------------------------------------------------- #

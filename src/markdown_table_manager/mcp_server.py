@@ -37,6 +37,8 @@ def _generate_instructions() -> str:
             "- add_entry(table_name, entry): add a row to a registered table.\n"
             "- delete_entry(table_name, row_index): delete a row from a registered table.\n"
             "- modify_entry(table_name, key, updates): modify a row identified by the first column.\n"
+            "- add_column(table_name, column_name, default=\"\"): add a new column.\n"
+            "- rename_column(table_name, old_name, new_name): rename an existing column.\n"
         )
 
     lines = [
@@ -73,6 +75,8 @@ def _generate_instructions() -> str:
             "- modify_entry(table_name, key, updates): modifies a row identified by the first column value; "
             "`updates` is a dict of column/value pairs.",
             "- register_table(name, path): registers a markdown table file. The file must already exist and be a markdown file.",
+            "- add_column(table_name, column_name, default=\"\"): adds a new column to the table; existing rows receive the default value.",
+            "- rename_column(table_name, old_name, new_name): renames an existing column.",
             "",
             "Use these tools via MCP to manage your markdown tables programmatically.",
         ]
@@ -126,6 +130,23 @@ def run_mcp_server():
         Registers a markdown table file. The file must already exist and be a markdown file.
         """
         manager.register_table(name, Path(path))
+        return {"status": "ok"}
+
+    @mcp.tool(title="Add new column")
+    async def markdown_table_manager__add_column(table_name: str, column_name: str):
+        """
+        Adds a new column to the specified table. Existing rows receive the
+        provided default value (empty string by default).
+        """
+        manager.add_column(table_name, column_name)
+        return {"status": "ok"}
+
+    @mcp.tool(title="Rename column")
+    async def markdown_table_manager__rename_column(table_name: str, old_name: str, new_name: str):
+        """
+        Renames an existing column in the specified table.
+        """
+        manager.rename_column(table_name, old_name, new_name)
         return {"status": "ok"}
 
     mcp.run()
