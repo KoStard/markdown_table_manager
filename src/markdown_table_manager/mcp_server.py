@@ -149,4 +149,11 @@ def run_mcp_server():
         manager.rename_column(table_name, old_name, new_name)
         return {"status": "ok"}
 
+    @mcp.tool(title="Get instructions and registered tables")
+    async def markdown_table_manager__get_instructions_and_registered_tables():
+        """
+        Returns the current instructions, including registered tables and their schemas.
+        """
+        return _generate_instructions()
+
     mcp.run()
